@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
 public class SeatHoldTest {
 
 	@Before
@@ -37,4 +38,20 @@ public class SeatHoldTest {
 		ticketService.findAndHoldSeats(8, "tofu@tofu.com");
 		assertEquals(87, ticketService.numSeatsAvailable());
 	}
+	@Test(expected = IllegalArgumentException.class)
+	public void test5(){
+		TicketService ticketService = new TicketServiceImpl(10,10);
+		ticketService.reserveSeats(8, "huehuehuehue.com");
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void test6(){
+		TicketService ticketService = new TicketServiceImpl(10,10);
+		ticketService.findAndHoldSeats(-4, "lemon@lemon.com");
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void test7(){
+		TicketService ticketService = new TicketServiceImpl(0,0);
+		ticketService.findAndHoldSeats(4, "lemon@lemon.com");
+	}
+	
 }

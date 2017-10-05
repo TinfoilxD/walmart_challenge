@@ -12,6 +12,7 @@ import java.util.Set;
  */
 public class SeatHold {
 	
+	private static final int EXPIRATION_TIME = 15000;
 	private static int seatHoldSequence = 0;
 	private int seatHoldId;
 	private long expirationDate;
@@ -22,10 +23,11 @@ public class SeatHold {
 		seatHoldSequence++;
 		seatHoldId = seatHoldSequence;
 		heldSeats = new HashSet<Seat>();
+		expirationDate = new Date().getTime() + EXPIRATION_TIME;
 	}
 
 	public boolean isExpired(){
-		return expirationDate > new Date().getTime();
+		return expirationDate < new Date().getTime();
 	}
 	public int getSeatHoldId() {
 		return seatHoldId;

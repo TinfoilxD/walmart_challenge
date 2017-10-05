@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+
 public class SeatHoldService {
 	
 	private Logger log = Logger.getLogger(SeatHoldService.class);
@@ -62,7 +63,7 @@ public class SeatHoldService {
 		Set<Seat> seatHoldSeats = seatHold.getHeldSeats();
 		while(seatHold.getHeldSeats().size() < i){
 			if(seatsLeft.isEmpty()){
-				//throw new Exception("No more seats left");
+				throw new IllegalArgumentException("No more seats left");
 			}
 			seatHoldSeats.add(seatsLeft.pop());
 		}

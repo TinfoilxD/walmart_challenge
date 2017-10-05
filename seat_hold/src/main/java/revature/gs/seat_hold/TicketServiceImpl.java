@@ -87,10 +87,12 @@ public class TicketServiceImpl implements TicketService {
 	 * 
 	 */
 	public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
-
+		if(numSeats < 0){
+			throw new IllegalArgumentException("Negative number of seats");
+		}
 		Customer customer = customerService.getCustomer(customerEmail);
 		SeatHold seatHold = new SeatHold();
-
+		seatHold.setCustomerEmail(customerEmail);
 		LinkedList<Seat> preferences;
 		if (customer != null) {
 			preferences = customer.getPreferences();
@@ -116,7 +118,8 @@ public class TicketServiceImpl implements TicketService {
 		 */
 		int currentHeldNumber = seatHold.getHeldSeats().size();
 		if (currentHeldNumber < numSeats) {
-			holdService.holdNextAvailableSeats(numSeats - currentHeldNumber, venue, seatHold, reserveService);
+			holdService.holdNextAvailableSeats(numSeats - currentHeldNumber,
+					venue, seatHold, reserveService);
 		}
 
 		holdService.addSeatHold(seatHold);
@@ -124,8 +127,17 @@ public class TicketServiceImpl implements TicketService {
 
 	}
 
+	
+	/**
+	 * takes in a seatholdid which was previously given from findAndHoldSeats
+	 * Removes seathold from SeatHoldService and puts it into SeatReserveService
+	 * throws IllegalArgument if seathold does not exist in SeatHoldService
+	 */
 	public String reserveSeats(int seatHoldId, String customerEmail) {
 		SeatHold toReserve = holdService.remove(seatHoldId);
+		if(toReserve == null){
+			throw new IllegalArgumentException("Seathold does not exist.");
+		}
 		return reserveService.reserveSeatHold(toReserve);
 	}
 

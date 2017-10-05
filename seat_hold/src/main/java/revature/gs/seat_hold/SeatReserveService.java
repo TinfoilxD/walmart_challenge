@@ -32,6 +32,7 @@ public class SeatReserveService {
 	public String reserveSeatHold(SeatHold reserveSeatHold) {
 		reservedSeats.add(reserveSeatHold);
 		
+		
 		log.debug("reserveSeatHold " + reservedSeats);
 		//returns a string representation of the seathold hashcode
 		//since seathold doesn't change once reserved
