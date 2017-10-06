@@ -1,7 +1,9 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.helper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import com.revature.gs.seat_hold.model.Customer;
 
 public class CustomerService {
 	private ArrayList<Customer> customers;

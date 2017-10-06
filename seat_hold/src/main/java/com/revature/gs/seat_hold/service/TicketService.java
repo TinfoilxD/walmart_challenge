@@ -1,4 +1,6 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.service;
+
+import com.revature.gs.seat_hold.model.SeatHold;
 
 public interface TicketService {
 	int numSeatsAvailable();

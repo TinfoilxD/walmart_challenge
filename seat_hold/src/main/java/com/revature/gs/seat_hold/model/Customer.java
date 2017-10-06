@@ -1,4 +1,4 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

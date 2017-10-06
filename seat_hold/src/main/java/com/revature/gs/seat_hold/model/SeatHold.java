@@ -1,4 +1,4 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.model;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,11 +12,17 @@ import java.util.Set;
  */
 public class SeatHold {
 	
-	private static final int EXPIRATION_TIME = 15000;
+	private static final long EXPIRATION_TIME = 15000L;
+	
+	//"id" generator
 	private static int seatHoldSequence = 0;
 	private int seatHoldId;
+	
+	//expiration time in epoch time
 	private long expirationDate;
+	
 	private Set<Seat> heldSeats;
+	
 	private String customerEmail;
 	
 	public SeatHold(){

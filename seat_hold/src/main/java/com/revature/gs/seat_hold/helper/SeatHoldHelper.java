@@ -1,4 +1,4 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.helper;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -8,15 +8,20 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.revature.gs.seat_hold.exception.CapacityReachedException;
+import com.revature.gs.seat_hold.model.Seat;
+import com.revature.gs.seat_hold.model.SeatHold;
+import com.revature.gs.seat_hold.model.Venue;
 
-public class SeatHoldService {
+
+public class SeatHoldHelper {
 	
-	private Logger log = Logger.getLogger(SeatHoldService.class);
+	private Logger log = Logger.getLogger(SeatHoldHelper.class);
 
 	
 	private Set<SeatHold> seatHolds;
 	
-	public SeatHoldService(){
+	public SeatHoldHelper(){
 		seatHolds = new HashSet<SeatHold>();
 	}
 	public boolean hasSeat(Seat s){
@@ -32,7 +37,15 @@ public class SeatHoldService {
 		return false;
 	}
 
-	public SeatHold holdNextAvailableSeats(int i, Venue venue, SeatHold seatHold, SeatReserveService reserveService) {
+	/**
+	 * 
+	 * @param i
+	 * @param venue
+	 * @param seatHold
+	 * @param reserveService
+	 * @return a mutated Seathold with the added seats still required to fill the numSeats quota
+	 */
+	public SeatHold holdNextAvailableSeats(int i, Venue venue, SeatHold seatHold, SeatReserveHelper reserveService) {
 		Seat[][] seats = venue.getSeats();
 		
 		LinkedList<Seat> seatsLeft = new LinkedList<Seat>();
@@ -63,7 +76,7 @@ public class SeatHoldService {
 		Set<Seat> seatHoldSeats = seatHold.getHeldSeats();
 		while(seatHold.getHeldSeats().size() < i){
 			if(seatsLeft.isEmpty()){
-				throw new IllegalArgumentException("No more seats left");
+				throw new CapacityReachedException("No more seats left");
 			}
 			seatHoldSeats.add(seatsLeft.pop());
 		}
@@ -79,8 +92,14 @@ public class SeatHoldService {
 		seatHolds.add(seatHold);
 		
 	}
-	public SeatHold remove(int seatHoldId) {
+	public SeatHold remove(int seatHoldId, String customerEmail) {
 		SeatHold toRemove = findById(seatHoldId);
+		if(toRemove == null){
+			throw new IllegalArgumentException("Seathold does not exist");
+		}
+		if(!toRemove.getCustomerEmail().equals(customerEmail)){
+			throw new SecurityException("Email does not match");
+		}
 		seatHolds.remove(toRemove);
 		log.debug(seatHolds);
 		return toRemove;

@@ -1,4 +1,4 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,18 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-public class SeatReserveService {
+import com.revature.gs.seat_hold.exception.ExpiredSeatHoldException;
+import com.revature.gs.seat_hold.model.Seat;
+import com.revature.gs.seat_hold.model.SeatHold;
+
+public class SeatReserveHelper {
 	
-	private Logger log = Logger.getLogger(SeatReserveService.class);
+	private Logger log = Logger.getLogger(SeatReserveHelper.class);
 
 	
 	private List<SeatHold> reservedSeats;
 	
-	public SeatReserveService(){
+	public SeatReserveHelper(){
 		reservedSeats = new ArrayList<SeatHold>();
 	}
 	
@@ -30,6 +34,11 @@ public class SeatReserveService {
 	}
 
 	public String reserveSeatHold(SeatHold reserveSeatHold) {
+		
+		if(reserveSeatHold.isExpired()){
+			throw new ExpiredSeatHoldException("Seathold has expired");
+		}
+		
 		reservedSeats.add(reserveSeatHold);
 		
 		

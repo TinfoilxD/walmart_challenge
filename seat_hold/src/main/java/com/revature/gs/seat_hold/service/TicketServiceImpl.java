@@ -1,8 +1,17 @@
-package revature.gs.seat_hold;
+package com.revature.gs.seat_hold.service;
 
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
+
+import com.revature.gs.seat_hold.exception.SeatHoldNotFoundException;
+import com.revature.gs.seat_hold.helper.CustomerService;
+import com.revature.gs.seat_hold.helper.SeatHoldHelper;
+import com.revature.gs.seat_hold.helper.SeatReserveHelper;
+import com.revature.gs.seat_hold.model.Customer;
+import com.revature.gs.seat_hold.model.Seat;
+import com.revature.gs.seat_hold.model.SeatHold;
+import com.revature.gs.seat_hold.model.Venue;
 
 public class TicketServiceImpl implements TicketService {
 
@@ -12,10 +21,10 @@ public class TicketServiceImpl implements TicketService {
 	private Venue venue;
 
 	// service that deals with holding seats
-	private SeatHoldService holdService;
+	private SeatHoldHelper holdService;
 
 	// service that deals with reserving seats
-	private SeatReserveService reserveService;
+	private SeatReserveHelper reserveService;
 
 	// service that deals with customer and customer preferences
 	private CustomerService customerService;
@@ -23,13 +32,13 @@ public class TicketServiceImpl implements TicketService {
 	/**
 	 * Sets the seat configurationt to 9x33 which was the venue in documentation
 	 * 
-	 * @see revature.gs.seat_hold.Venue#setDefault()
+	 * @see com.revature.gs.seat_hold.model.Venue#setDefault()
 	 */
 	public TicketServiceImpl() {
 		venue = new Venue();
 		venue.setSize(9, 33);
-		holdService = new SeatHoldService();
-		reserveService = new SeatReserveService();
+		holdService = new SeatHoldHelper();
+		reserveService = new SeatReserveHelper();
 		customerService = new CustomerService();
 
 	}
@@ -37,28 +46,28 @@ public class TicketServiceImpl implements TicketService {
 	/**
 	 * Sets the venue size wth rows and columns
 	 * 
-	 * @see revature.gs.seat_hold.Venue#setSize()
+	 * @see com.revature.gs.seat_hold.model.Venue#setSize()
 	 * @param row
 	 * @param column
 	 */
 	public TicketServiceImpl(int row, int column){
 		venue = new Venue();
 		venue.setSize(row, column);
-		holdService = new SeatHoldService();
-		reserveService = new SeatReserveService();
+		holdService = new SeatHoldHelper();
+		reserveService = new SeatReserveHelper();
 		customerService = new CustomerService();
 	}
 
 	/**
 	 * Creates the menu based on the strings given in the input
 	 * 
-	 * @see revature.gs.seat_hold.Venue#setSeats(String[])
+	 * @see com.revature.gs.seat_hold.model.Venue#setSeats(String[])
 	 */
 	public TicketServiceImpl(String[] seatsString) {
 		venue = new Venue();
 		venue.setSeats(seatsString);
-		holdService = new SeatHoldService();
-		reserveService = new SeatReserveService();
+		holdService = new SeatHoldHelper();
+		reserveService = new SeatReserveHelper();
 		customerService = new CustomerService();
 
 	}
@@ -134,9 +143,12 @@ public class TicketServiceImpl implements TicketService {
 	 * throws IllegalArgument if seathold does not exist in SeatHoldService
 	 */
 	public String reserveSeats(int seatHoldId, String customerEmail) {
-		SeatHold toReserve = holdService.remove(seatHoldId);
+		
+		SeatHold toReserve = holdService.remove(seatHoldId, customerEmail);
+		
+		
 		if(toReserve == null){
-			throw new IllegalArgumentException("Seathold does not exist.");
+			throw new SeatHoldNotFoundException("Seathold does not exist.");
 		}
 		return reserveService.reserveSeatHold(toReserve);
 	}
