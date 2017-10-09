@@ -22,7 +22,10 @@ Get Source
 ```
 git clone https://github.com/TinfoilxD/walmart_challenge.git
 ```
-
+Navigate to Project
+```
+cd seat_hold
+```
 Install and Package
 ```
 mvn clean package
